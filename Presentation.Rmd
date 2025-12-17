@@ -3,8 +3,8 @@ title: "Multilevel Analysis 1(level1:individual)"
 author: "CHEN MAOSEN"
 date: "2025-12-19"
 output:
-  slidy_presentation: default
   beamer_presentation: default
+  slidy_presentation: default
 ---
 
 ```{r setup, include=FALSE}
@@ -140,6 +140,13 @@ ggplot(dat, aes(basement, log.radon)) +
   theme(panel.grid = element_blank(),
         strip.background = element_blank())
 ```
+\scriptsize
+
+- Complete pooling assumes no variance between counties, but it's often larger.  
+- No pooling assumes larger variance between counties(independence), but it's often smaller.  
+- Partial pooling is in between.  
+
+\normalsize
 
 # Model comparison
 
