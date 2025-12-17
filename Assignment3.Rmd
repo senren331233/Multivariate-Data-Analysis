@@ -1,0 +1,270 @@
+---
+title: "Multilevel Analysis 1(level1:individual)"
+author: "CHEN MAOSEN"
+date: "2025-12-19"
+output:
+  slidy_presentation: default
+  beamer_presentation: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+```
+
+# Description of dataset
+
+```{r radon_table, echo=FALSE, results='asis'}
+radon <- read.csv("https://vincentarelbundock.github.io/Rdatasets/csv/HLMdiag/radon.csv")
+radon <- radon[ , -1]
+radon$county <- factor(radon$county)
+knitr::kable(head(radon, 5), digits = 4, row.names = FALSE)
+```
+
+\vspace{-0.5cm}
+Dataset: \href{https://vincentarelbundock.github.io/Rdatasets/csv/HLMdiag/radon.csv}{\textcolor{blue}{Radon data}}
+
+\vspace{-0.2cm}
+- **House variables:**
+  - **log.radon**:Numeric. Logarithm of indoor radon measurement values  
+  - **basement**:Binary. Measurement position indication (0=basement/1=1st floor)  
+
+- **County variables:**
+  - **county**:Factor. ID of each county with 85 levels
+  - **county.name**:Factor. Name of each county 
+  - **uranium**:Numeric. Average uranium in the soil of each county  
+
+# Analysis method and model specification
+
+## Random intercept model:
+Level 1:$\quad Y_{ij}=\beta_{0j}+\beta_{1j}\text{Basement}_{ij}+R_{ij}\quad R_{ij}\sim\mathcal{N}(0,\sigma^2)$  
+Level 2:$\quad \beta_{0j}=\gamma_1+U_j \quad U_j\sim\mathcal{N}(0,\tau_0^2)$
+Combined:$\quad Y_{ij}=\underbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed effect}}+\underbrace{U_j+R_{ij}}_{\text{random effect}}$  
+  
+$Y_{ij}=\text{log.radon}_{ij}$
+
+## Parameters:
+
+- $\gamma_1$:Fixed effect. Mean intercept across all counties, controlling for Basement. 
+- $\beta_{1j}$:Fixed effect. Mean Basement slope across all counties.  
+- $\sigma^2$:Random effect. Variance of county intercepts around $\gamma_1$, controlling for Basement.  
+- $\tau_0^2$:Random effect. Variance of the houses around their county mean, controlling for Basement.  
+
+# Analysis method and model specification
+
+```{r,echo=TRUE}
+library(lme4)
+Basement.fixed <- lmer(
+  log.radon ~ 1 + basement + (1 | county), 
+  data = radon)
+```
+
+\vspace{-0.5cm}
+\scriptsize
+```{r}
+library(performance)
+x <- capture.output(summary(Basement.fixed))
+writeLines(x[match("Random effects:", x):(match("Correlation of Fixed Effects:", x, nomatch = length(x) + 1) - 1)])
+
+icc(Basement.fixed)
+```
+\normalsize
+
+# Results
+
+## Random intercept model:
+
+By default, we use REML to estimate parameters:  
+
+\vspace{+0.3cm}
+$\text{log.radon}_{ij}=1.462-0.693\text{Basement}_{ij}+U_j+R_{ij}$  
+$U_j\sim\mathcal{N}(0,0.108)$  
+$R_{ij}\sim\mathcal{N}(0,0.571)$
+
+## ICC
+Adjusted ICC: 0.159  
+Unadjusted ICC: 0.145  
+
+\vspace{+0.3cm}
+*Interpretation:*  
+
+- Adjusted:  
+County grouping accounts for 15.9% of the total variance of the log.radon under the control of Basement.  
+- Unadjusted:  
+County grouping accounts for 14.5% of the total variance of the log.radon
+
+
+# Pooling
+
+```{r,echo=FALSE}
+Basement.fixed <- lmer(
+  log.radon ~ 1 + basement + (1 | county), 
+  data = radon)
+Basement.nopool <- lmList(log.radon ~ basement | county, data = radon)
+Basement.complete <- lm(
+  log.radon ~ 1 + basement, data = radon)
+```
+
+\vspace{+0.5cm}
+```{r, fig.width=12, fig.height=6}
+library(ggplot2)
+library(ggh4x)
+
+radon$county <- factor(radon$county)
+set.seed(1)
+pick <- sample(levels(radon$county), 9)
+dat  <- radon[radon$county %in% pick, ]
+
+grid <- expand.grid(county = pick, basement = c(0, 1))
+
+grid$y_complete <- predict(Basement.complete, newdata = grid)
+grid$y_partial  <- predict(Basement.fixed,   newdata = grid, re.form = NULL)
+
+cf <- coef(Basement.nopool)
+grid$y_nopool <- cf[as.character(grid$county), "(Intercept)"] +
+                cf[as.character(grid$county), "basement"] * grid$basement
+
+lines <- rbind(
+  data.frame(county=grid$county, basement=grid$basement, model="Complete pooling", yhat=grid$y_complete),
+  data.frame(county=grid$county, basement=grid$basement, model="Partial pooling",  yhat=grid$y_partial),
+  data.frame(county=grid$county, basement=grid$basement, model="No pooling",       yhat=grid$y_nopool)
+)
+
+ggplot(dat, aes(basement, log.radon)) +
+  geom_jitter(width = 0.08, height = 0, alpha = 0.5) +
+  geom_line(data = lines, aes(y = yhat, color = model, group = model), linewidth = 0.9) +
+  facet_wrap2(~ county, ncol = 3, axes = "all") +
+  scale_x_continuous(breaks = c(0, 1), labels = c("basement", "1st floor")) +
+  scale_color_manual(values = c("Complete pooling"="blue", "Partial pooling"="red", "No pooling"="brown")) +
+  labs(x = "Basement", y = "log.radon", color = NULL) +
+  theme_classic() +
+  theme(panel.grid = element_blank(),
+        strip.background = element_blank())
+```
+
+# Model comparison
+
+## Different fixed part(with level 2 predictor)
+
+\tiny
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{j}+R_{ij}}^{\text{random part}}$ & $D_0=2163.7$ & $v_0=4$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{j}+R_{ij}}_{\text{random part}}$ & $D_1=2122.8$ & $v_1=5$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+\tiny
+Since models only have difference of fixed part, thus we **must** use ML to estimate parameters: 
+```{r,echo=TRUE}
+Basement.fixed         <- lmer(log.radon ~ 1 + basement +           (1 | county), data = radon)
+Uranium.Basement.fixed <- lmer(log.radon ~ 1 + basement + uranium + (1 | county), data = radon)
+anova(Basement.fixed,Uranium.Basement.fixed,
+      refit=TRUE)
+```
+\normalsize
+
+# Model comparison
+
+## Different fixed part(with level 2 predictor)
+
+\tiny
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{j}+R_{ij}}^{\text{random part}}$ & $D_0=2163.7$ & $v_0=4$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{j}+R_{ij}}_{\text{random part}}$ & $D_1=2122.8$ & $v_1=5$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+- Test statistic: $D_0-D_1\sim\mathcal{X}_1^2$  
+- $D_0-D_1$=2163.7-2122.8=40.834  
+- $p$=P[$D_0-D_1$>40.834]<.001
+
+## Conclusion
+At $\alpha=5$%, we reject $\mathcal{M}_0$.  
+Adding Uranium significantly imporves the model fit.
+
+# Model comparison
+
+## Different random part(with random slope)
+
+\tiny
+\setlength{\tabcolsep}{2.5pt}
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{0j}+R_{ij}}^{\text{random part}}$ & $D_0=2134.2$ & $v_0=5$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{0j}+U_{1j}\text{Basement}_{ij}+R_{ij}}_{\text{random part}}$ & $D_1=2128.6$ & $v_1=7$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+\tiny
+Since models only have difference of random part, thus we **should** use REML to estimate parameters:  
+```{r,echo=TRUE}
+Uranium.Basement.fixed  <- lmer(log.radon ~ 1 + basement + uranium + (1 | county), data = radon)
+Uranium.Basement.random <- lmer(log.radon ~ 1 + basement + uranium + (1 + basement|county), data = radon)
+anova(Uranium.Basement.fixed,Uranium.Basement.random,
+      refit=FALSE)
+```
+\normalsize
+
+# Model comparison
+
+## Different random part(with random slope)
+
+\tiny
+\setlength{\tabcolsep}{2.5pt}
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{0j}+R_{ij}}^{\text{random part}}$ & $D_0=2134.2$ & $v_0=5$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{0j}+U_{1j}\text{Basement}_{ij}+R_{ij}}_{\text{random part}}$ & $D_1=2128.6$ & $v_1=7$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+- Test statistic: $D_0-D_1\sim\mathcal{X}_2^2$  
+- $D_0-D_1$=2134.2-2128.6=5.5459  
+- $p$=P[$D_0-D_1$>5.5459]=0.0628
+
+## Conclusion
+At $\alpha=5$%, we fail to reject $\mathcal{M}_0$.  
+There is not enough evidence that adding random slopes for Basement imporves model fit.  
+We decude to retain $\mathcal{M}_0$.
+
+\vspace{+0.5cm}
+\tiny
+All codes and dataset are avaliable in \href{https://github.com/senren331233/Multivariate-Data-Analysis}{\textcolor{blue}{github}}
+\normalsize
