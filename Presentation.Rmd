@@ -24,14 +24,18 @@ knitr::kable(head(radon, 5), digits = 4, row.names = FALSE)
 Dataset: \href{https://vincentarelbundock.github.io/Rdatasets/csv/HLMdiag/radon.csv}{\textcolor{blue}{Radon data}}
 
 \vspace{-0.2cm}
+\scriptsize
+
 - **House variables:**
-  - **log.radon**:Numeric. Logarithm of indoor radon measurement values  
+  - **log.radon**:Numeric. Logarithm of indoor radon measurement values [min:-2.303/max:3.875/mean:1.225]  
   - **basement**:Binary. Measurement position indication (0=basement/1=1st floor)  
 
 - **County variables:**
   - **county**:Factor. ID of each county with 85 levels
   - **county.name**:Factor. Name of each county 
-  - **uranium**:Numeric. Average uranium in the soil of each county  
+  - **uranium**:Numeric. Average uranium in the soil of each county [min:-0.882/max:0.528/mean:-0.132] 
+  
+\normalsize
 
 # Analysis method and model specification
 
@@ -92,6 +96,11 @@ Unadjusted ICC: 0.145 [0.076, 0.218]
 County grouping accounts for 15.9% of the total variance of the log.radon under the control of Basement.  
 - Unadjusted:  
 County grouping accounts for 14.5% of the total variance of the log.radon
+
+# Results
+
+## Assumption check
+
 
 
 # Pooling
