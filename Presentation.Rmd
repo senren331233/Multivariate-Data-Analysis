@@ -65,7 +65,8 @@ library(performance)
 x <- capture.output(summary(Basement.fixed))
 writeLines(x[match("Random effects:", x):(match("Correlation of Fixed Effects:", x, nomatch = length(x) + 1) - 1)])
 
-icc(Basement.fixed)
+set.seed(1993)
+icc(Basement.fixed, ci = 0.95, iterations = 1000)
 ```
 \normalsize
 
@@ -80,9 +81,9 @@ $\text{log.radon}_{ij}=1.462-0.693\text{Basement}_{ij}+U_j+R_{ij}$
 $U_j\sim\mathcal{N}(0,0.108)$  
 $R_{ij}\sim\mathcal{N}(0,0.571)$
 
-## ICC
-Adjusted ICC: 0.159  
-Unadjusted ICC: 0.145  
+## ICC(95% CI)
+Adjusted ICC: 0.159 [0.085, 0.240]  
+Unadjusted ICC: 0.145 [0.076, 0.218]  
 
 \vspace{+0.3cm}
 *Interpretation:*  
@@ -110,7 +111,7 @@ library(ggplot2)
 library(ggh4x)
 
 radon$county <- factor(radon$county)
-set.seed(1)
+set.seed(1993)
 pick <- sample(levels(radon$county), 9)
 dat  <- radon[radon$county %in% pick, ]
 
@@ -140,6 +141,7 @@ ggplot(dat, aes(basement, log.radon)) +
   theme(panel.grid = element_blank(),
         strip.background = element_blank())
 ```
+
 \scriptsize
 
 - Complete pooling assumes no variance between counties, but it's often larger.  
@@ -271,7 +273,21 @@ At $\alpha=5$%, we fail to reject $\mathcal{M}_0$.
 There is not enough evidence that adding random slopes for Basement imporves model fit.  
 We decude to retain $\mathcal{M}_0$.
 
-\vspace{+0.5cm}
-\tiny
-All codes and dataset are avaliable in \href{https://github.com/senren331233/Multivariate-Data-Analysis}{\textcolor{blue}{github}}
-\normalsize
+# Versions and codes
+
+#Versions and codes
+
+```{r  echo=FALSE, results='asis'}
+knitr::kable(
+  data.frame(
+    Package = c("knitr", "lme4", "performance", "nlme", "ggplot2", "ggh4x"),
+    Version = sapply(c("knitr", "lme4", "performance", "nlme", "ggplot2", "ggh4x"),
+                     function(p) if (requireNamespace(p, quietly = TRUE))
+                       as.character(packageVersion(p)) else NA),
+    check.names = FALSE),
+  row.names = FALSE)
+```
+
+\vspace{+0.3cm}
+R version 4.5.1  
+All codes and dataset are avaliable in   \href{https://github.com/senren331233/Multivariate-Data-Analysis}{\textcolor{blue}{github}}

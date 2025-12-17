@@ -3,7 +3,6 @@ title: "Multilevel Analysis 1(level1:individual)"
 author: "CHEN MAOSEN"
 date: "2025-12-19"
 output:
-  slidy_presentation: default
   beamer_presentation: default
 ---
 
@@ -65,7 +64,8 @@ library(performance)
 x <- capture.output(summary(Basement.fixed))
 writeLines(x[match("Random effects:", x):(match("Correlation of Fixed Effects:", x, nomatch = length(x) + 1) - 1)])
 
-icc(Basement.fixed)
+set.seed(1993)
+icc(Basement.fixed, ci = 0.95, iterations = 1000)
 ```
 \normalsize
 
@@ -80,9 +80,9 @@ $\text{log.radon}_{ij}=1.462-0.693\text{Basement}_{ij}+U_j+R_{ij}$
 $U_j\sim\mathcal{N}(0,0.108)$  
 $R_{ij}\sim\mathcal{N}(0,0.571)$
 
-## ICC
-Adjusted ICC: 0.159  
-Unadjusted ICC: 0.145  
+## ICC(95% CI)
+Adjusted ICC: 0.159 [0.082, 0.236]  
+Unadjusted ICC: 0.145 [0.074, 0.217]  
 
 \vspace{+0.3cm}
 *Interpretation:*  
@@ -110,7 +110,7 @@ library(ggplot2)
 library(ggh4x)
 
 radon$county <- factor(radon$county)
-set.seed(1)
+set.seed(1993)
 pick <- sample(levels(radon$county), 9)
 dat  <- radon[radon$county %in% pick, ]
 
@@ -141,6 +141,14 @@ ggplot(dat, aes(basement, log.radon)) +
         strip.background = element_blank())
 ```
 
+\scriptsize
+
+- Complete pooling assumes no variance between counties, but it's often larger.  
+- No pooling assumes larger variance between counties(independence), but it's often smaller.  
+- Partial pooling is in between.  
+
+\normalsize
+
 # Model comparison
 
 ## Different fixed part(with level 2 predictor)
@@ -155,7 +163,7 @@ ggplot(dat, aes(basement, log.radon)) +
 \hline
 $\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
 $\overbrace{U_{j}+R_{ij}}^{\text{random part}}$ & $D_0=2163.7$ & $v_0=4$\\
-$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}+\gamma_2\text{Uranium}_j}_{\text{fixed part}}$ & $+$ &
 $\underbrace{U_{j}+R_{ij}}_{\text{random part}}$ & $D_1=2122.8$ & $v_1=5$\\
 \hline
 \end{tabular}
@@ -186,7 +194,7 @@ anova(Basement.fixed,Uranium.Basement.fixed,
 \hline
 $\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
 $\overbrace{U_{j}+R_{ij}}^{\text{random part}}$ & $D_0=2163.7$ & $v_0=4$\\
-$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}+\gamma_2\text{Uranium}_j}_{\text{fixed part}}$ & $+$ &
 $\underbrace{U_{j}+R_{ij}}_{\text{random part}}$ & $D_1=2122.8$ & $v_1=5$\\
 \hline
 \end{tabular}
@@ -264,7 +272,21 @@ At $\alpha=5$%, we fail to reject $\mathcal{M}_0$.
 There is not enough evidence that adding random slopes for Basement imporves model fit.  
 We decude to retain $\mathcal{M}_0$.
 
-\vspace{+0.5cm}
-\tiny
-All codes and dataset are avaliable in \href{https://github.com/senren331233/Multivariate-Data-Analysis}{\textcolor{blue}{github}}
-\normalsize
+# Versions and codes
+
+# Versions and codes
+
+```{r  echo=FALSE, results='asis'}
+knitr::kable(
+  data.frame(
+    Package = c("knitr", "lme4", "performance", "nlme", "ggplot2", "ggh4x"),
+    Version = sapply(c("knitr", "lme4", "performance", "nlme", "ggplot2", "ggh4x"),
+                     function(p) if (requireNamespace(p, quietly = TRUE))
+                       as.character(packageVersion(p)) else NA),
+    check.names = FALSE),
+  row.names = FALSE)
+```
+
+\vspace{+0.3cm}
+R version 4.5.1  
+All codes and dataset are avaliable in   \href{https://github.com/senren331233/Multivariate-Data-Analysis}{\textcolor{blue}{github}}
