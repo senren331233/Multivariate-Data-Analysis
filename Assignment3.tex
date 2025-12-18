@@ -1,0 +1,585 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+  ignorenonframetext,
+]{beamer}
+\usepackage{pgfpages}
+\setbeamertemplate{caption}[numbered]
+\setbeamertemplate{caption label separator}{: }
+\setbeamercolor{caption name}{fg=normal text.fg}
+\beamertemplatenavigationsymbolsempty
+% Prevent slide breaks in the middle of a paragraph
+\widowpenalties 1 10000
+\raggedbottom
+\setbeamertemplate{part page}{
+  \centering
+  \begin{beamercolorbox}[sep=16pt,center]{part title}
+    \usebeamerfont{part title}\insertpart\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{section page}{
+  \centering
+  \begin{beamercolorbox}[sep=12pt,center]{section title}
+    \usebeamerfont{section title}\insertsection\par
+  \end{beamercolorbox}
+}
+\setbeamertemplate{subsection page}{
+  \centering
+  \begin{beamercolorbox}[sep=8pt,center]{subsection title}
+    \usebeamerfont{subsection title}\insertsubsection\par
+  \end{beamercolorbox}
+}
+\AtBeginPart{
+  \frame{\partpage}
+}
+\AtBeginSection{
+  \ifbibliography
+  \else
+    \frame{\sectionpage}
+  \fi
+}
+\AtBeginSubsection{
+  \frame{\subsectionpage}
+}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\newif\ifbibliography
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+\usepackage{caption}
+% Make caption package work with longtable
+\makeatletter
+\def\fnum@table{\tablename~\thetable}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Multilevel Analysis 1(level1:individual)},
+  pdfauthor={CHEN MAOSEN},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Multilevel Analysis 1(level1:individual)}
+\author{CHEN MAOSEN}
+\date{2025-12-19}
+
+\begin{document}
+\frame{\titlepage}
+
+\begin{frame}{Description of dataset}
+\phantomsection\label{description-of-dataset}
+\begin{longtable}[]{@{}rrrll@{}}
+\toprule\noalign{}
+log.radon & basement & uranium & county & county.name \\
+\midrule\noalign{}
+\endhead
+0.7885 & 1 & -0.6890 & 1 & AITKIN \\
+0.7885 & 0 & -0.6890 & 1 & AITKIN \\
+1.0647 & 0 & -0.6890 & 1 & AITKIN \\
+0.0000 & 0 & -0.6890 & 1 & AITKIN \\
+1.1314 & 0 & -0.8473 & 2 & ANOKA \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\vspace{-0.5cm}
+
+Dataset:
+\href{https://vincentarelbundock.github.io/Rdatasets/csv/HLMdiag/radon.csv}{\textcolor{blue}{Radon data}}
+
+\vspace{-0.2cm}
+\scriptsize
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{House variables:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{log.radon}:Numeric. Logarithm of indoor radon measurement
+    values {[}min:-2.303/max:3.875/mean:1.225{]}\\
+  \item
+    \textbf{basement}:Binary. Measurement position indication
+    (0=basement/1=1st floor)
+  \end{itemize}
+\item
+  \textbf{County variables:}
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \textbf{county}:Factor. ID of each county with 85 levels
+  \item
+    \textbf{county.name}:Factor. Name of each county
+  \item
+    \textbf{uranium}:Numeric. Average uranium in the soil of each county
+    {[}min:-0.882/max:0.528/mean:-0.132{]}
+  \end{itemize}
+\end{itemize}
+
+\normalsize
+\end{frame}
+
+\begin{frame}{Analysis method and model specification}
+\phantomsection\label{analysis-method-and-model-specification}
+\begin{block}{Random intercept model:}
+\phantomsection\label{random-intercept-model}
+Level
+1:\(\quad Y_{ij}=\beta_{0j}+\beta_{1j}\text{Basement}_{ij}+R_{ij}\quad R_{ij}\sim\mathcal{N}(0,\sigma^2)\)\\
+Level
+2:\(\quad \beta_{0j}=\gamma_1+U_j \quad U_j\sim\mathcal{N}(0,\tau_0^2)\)
+Combined:\(\quad Y_{ij}=\underbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed effect}}+\underbrace{U_j+R_{ij}}_{\text{random effect}}\)
+
+\(Y_{ij}=\text{log.radon}_{ij}\)
+\end{block}
+
+\begin{block}{Parameters:}
+\phantomsection\label{parameters}
+\begin{itemize}
+\tightlist
+\item
+  \(\gamma_1\):Fixed effect. Mean intercept across all counties,
+  controlling for Basement.
+\item
+  \(\beta_{1j}\):Fixed effect. Mean Basement slope across all
+  counties.\\
+\item
+  \(\sigma^2\):Random effect. Variance of county intercepts around
+  \(\gamma_1\), controlling for Basement.\\
+\item
+  \(\tau_0^2\):Random effect. Variance of the houses around their county
+  mean, controlling for Basement.
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Analysis method and model specification}
+\phantomsection\label{analysis-method-and-model-specification-1}
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(lme4)}
+\NormalTok{Basement.fixed }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(}
+\NormalTok{  log.radon }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ basement }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ county), }
+  \AttributeTok{data =}\NormalTok{ radon)}
+\end{Highlighting}
+\end{Shaded}
+
+\vspace{-0.5cm}
+\scriptsize
+
+\begin{verbatim}
+## Random effects:
+##  Groups   Name        Variance Std.Dev.
+##  county   (Intercept) 0.1077   0.3282  
+##  Residual             0.5709   0.7556  
+## Number of obs: 919, groups:  county, 85
+## 
+## Fixed effects:
+##             Estimate Std. Error t value
+## (Intercept)  1.46160    0.05158  28.339
+## basement    -0.69299    0.07043  -9.839
+\end{verbatim}
+
+\begin{verbatim}
+## # Intraclass Correlation Coefficient
+## 
+##     Adjusted ICC: 0.159 [0.085, 0.240]
+##   Unadjusted ICC: 0.145 [0.076, 0.218]
+\end{verbatim}
+
+\normalsize
+\end{frame}
+
+\begin{frame}{Results}
+\phantomsection\label{results}
+\begin{block}{Random intercept model:}
+\phantomsection\label{random-intercept-model-1}
+By default, we use REML to estimate parameters:
+
+\vspace{+0.3cm}
+
+\(\text{log.radon}_{ij}=1.462-0.693\text{Basement}_{ij}+U_j+R_{ij}\)\\
+\(U_j\sim\mathcal{N}(0,0.108)\)\\
+\(R_{ij}\sim\mathcal{N}(0,0.571)\)
+\end{block}
+
+\begin{block}{ICC(95\% CI)}
+\phantomsection\label{icc95-ci}
+Adjusted ICC: 0.159 {[}0.085, 0.240{]}\\
+Unadjusted ICC: 0.145 {[}0.076, 0.218{]}
+
+\vspace{+0.3cm}
+
+\emph{Interpretation:}
+
+\begin{itemize}
+\tightlist
+\item
+  Adjusted:\\
+  County grouping accounts for 15.9\% of the total variance of the
+  log.radon under the control of Basement.\\
+\item
+  Unadjusted:\\
+  County grouping accounts for 14.5\% of the total variance of the
+  log.radon
+\end{itemize}
+\end{block}
+\end{frame}
+
+\begin{frame}{Results}
+\phantomsection\label{results-1}
+\begin{block}{Assumption check}
+\phantomsection\label{assumption-check}
+\pandocbounded{\includegraphics[keepaspectratio]{Assignment3_files/figure-beamer/assumption_checks-1.pdf}}
+
+\vspace[+0.5cm]
+\scriptsize
+
+\begin{itemize}
+\tightlist
+\item
+  The model fit with no clear systematic bias.
+\item
+  The residuals are approximately normal distribution.
+\item
+  The random intercepts are approximately normal distribution.
+\end{itemize}
+
+\normalsize
+\end{block}
+\end{frame}
+
+\begin{frame}{Pooling}
+\phantomsection\label{pooling}
+\vspace{+0.5cm}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Assignment3_files/figure-beamer/unnamed-chunk-4-1.pdf}}
+
+\scriptsize
+
+\begin{itemize}
+\tightlist
+\item
+  Complete pooling assumes no variance between counties, but it's often
+  larger.\\
+\item
+  No pooling assumes larger variance between counties(independence), but
+  it's often smaller.\\
+\item
+  Partial pooling is in between.
+\end{itemize}
+
+\normalsize
+\end{frame}
+
+\begin{frame}[fragile]{Model comparison}
+\phantomsection\label{model-comparison}
+\begin{block}{Different fixed part(with level 2 predictor)}
+\phantomsection\label{different-fixed-partwith-level-2-predictor}
+\tiny
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{j}+R_{ij}}^{\text{random part}}$ & $D_0=2163.7$ & $v_0=4$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}+\gamma_2\text{Uranium}_j}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{j}+R_{ij}}_{\text{random part}}$ & $D_1=2122.8$ & $v_1=5$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+\tiny
+
+Since models only have difference of fixed part, thus we \textbf{must}
+use ML to estimate parameters:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Basement.fixed         }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(log.radon }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ basement }\SpecialCharTok{+}\NormalTok{           (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ county), }\AttributeTok{data =}\NormalTok{ radon)}
+\NormalTok{Uranium.Basement.fixed }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(log.radon }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ basement }\SpecialCharTok{+}\NormalTok{ uranium }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ county), }\AttributeTok{data =}\NormalTok{ radon)}
+\FunctionTok{anova}\NormalTok{(Basement.fixed,Uranium.Basement.fixed,}
+      \AttributeTok{refit=}\ConstantTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: radon
+## Models:
+## Basement.fixed: log.radon ~ 1 + basement + (1 | county)
+## Uranium.Basement.fixed: log.radon ~ 1 + basement + uranium + (1 | county)
+##                        npar    AIC    BIC  logLik -2*log(L)  Chisq Df
+## Basement.fixed            4 2171.7 2190.9 -1081.8    2163.7          
+## Uranium.Basement.fixed    5 2132.8 2156.9 -1061.4    2122.8 40.834  1
+##                        Pr(>Chisq)    
+## Basement.fixed                       
+## Uranium.Basement.fixed  1.658e-10 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\normalsize
+\end{block}
+\end{frame}
+
+\begin{frame}{Model comparison}
+\phantomsection\label{model-comparison-1}
+\begin{block}{Different fixed part(with level 2 predictor)}
+\phantomsection\label{different-fixed-partwith-level-2-predictor-1}
+\tiny
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{j}+R_{ij}}^{\text{random part}}$ & $D_0=2163.7$ & $v_0=4$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\beta_{1j}\text{Basement}_{ij}+\gamma_2\text{Uranium}_j}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{j}+R_{ij}}_{\text{random part}}$ & $D_1=2122.8$ & $v_1=5$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Test statistic: \(D_0-D_1\sim\mathcal{X}_1^2\)\\
+\item
+  \(D_0-D_1\)=2163.7-2122.8=40.834\\
+\item
+  \(p\)=P{[}\(D_0-D_1\)\textgreater40.834{]}\textless.001
+\end{itemize}
+\end{block}
+
+\begin{block}{Conclusion}
+\phantomsection\label{conclusion}
+At \(\alpha=5\)\%, we reject \(\mathcal{M}_0\).\\
+Adding Uranium significantly imporves the model fit.
+\end{block}
+\end{frame}
+
+\begin{frame}[fragile]{Model comparison}
+\phantomsection\label{model-comparison-2}
+\begin{block}{Different random part(with random slope)}
+\phantomsection\label{different-random-partwith-random-slope}
+\tiny
+\setlength{\tabcolsep}{2.5pt}
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{0j}+R_{ij}}^{\text{random part}}$ & $D_0=2134.2$ & $v_0=5$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{0j}+U_{1j}\text{Basement}_{ij}+R_{ij}}_{\text{random part}}$ & $D_1=2128.6$ & $v_1=7$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+\tiny
+
+Since models only have difference of random part, thus we
+\textbf{should} use REML to estimate parameters:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Uranium.Basement.fixed  }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(log.radon }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ basement }\SpecialCharTok{+}\NormalTok{ uranium }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{|}\NormalTok{ county), }\AttributeTok{data =}\NormalTok{ radon)}
+\NormalTok{Uranium.Basement.random }\OtherTok{\textless{}{-}} \FunctionTok{lmer}\NormalTok{(log.radon }\SpecialCharTok{\textasciitilde{}} \DecValTok{1} \SpecialCharTok{+}\NormalTok{ basement }\SpecialCharTok{+}\NormalTok{ uranium }\SpecialCharTok{+}\NormalTok{ (}\DecValTok{1} \SpecialCharTok{+}\NormalTok{ basement}\SpecialCharTok{|}\NormalTok{county), }\AttributeTok{data =}\NormalTok{ radon)}
+\FunctionTok{anova}\NormalTok{(Uranium.Basement.fixed,Uranium.Basement.random,}
+      \AttributeTok{refit=}\ConstantTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Data: radon
+## Models:
+## Uranium.Basement.fixed: log.radon ~ 1 + basement + uranium + (1 | county)
+## Uranium.Basement.random: log.radon ~ 1 + basement + uranium + (1 + basement | county)
+##                         npar    AIC    BIC  logLik -2*log(L)  Chisq Df
+## Uranium.Basement.fixed     5 2144.2 2168.3 -1067.1    2134.2          
+## Uranium.Basement.random    7 2142.6 2176.4 -1064.3    2128.6 5.5459  2
+##                         Pr(>Chisq)  
+## Uranium.Basement.fixed              
+## Uranium.Basement.random    0.06248 .
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\normalsize
+\end{block}
+\end{frame}
+
+\begin{frame}{Model comparison}
+\phantomsection\label{model-comparison-3}
+\begin{block}{Different random part(with random slope)}
+\phantomsection\label{different-random-partwith-random-slope-1}
+\tiny
+\setlength{\tabcolsep}{2.5pt}
+\begin{table}[t]
+\centering
+\renewcommand{\arraystretch}{1.25}
+\begin{tabular}{l l l c l c c}
+\hline
+\textbf{Model} & \multicolumn{4}{c}{\textbf{Equation}} & \textbf{Deviance} & \textbf{df}\\
+\hline
+$\mathcal{M}_0$ & $Y_{ij}=$ & $\overbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}^{\text{fixed part}}$ & $+$ &
+$\overbrace{U_{0j}+R_{ij}}^{\text{random part}}$ & $D_0=2134.2$ & $v_0=5$\\
+$\mathcal{M}_1$ & $Y_{ij}=$ & $\underbrace{\gamma_1+\gamma_2\text{Uranium}_j+\beta_{1j}\text{Basement}_{ij}}_{\text{fixed part}}$ & $+$ &
+$\underbrace{U_{0j}+U_{1j}\text{Basement}_{ij}+R_{ij}}_{\text{random part}}$ & $D_1=2128.6$ & $v_1=7$\\
+\hline
+\end{tabular}
+\end{table}
+\normalsize
+
+\begin{itemize}
+\tightlist
+\item
+  Test statistic: \(D_0-D_1\sim\mathcal{X}_2^2\)\\
+\item
+  \(D_0-D_1\)=2134.2-2128.6=5.5459\\
+\item
+  \(p\)=P{[}\(D_0-D_1\)\textgreater5.5459{]}=0.0628
+\end{itemize}
+\end{block}
+
+\begin{block}{Conclusion}
+\phantomsection\label{conclusion-1}
+At \(\alpha=5\)\%, we fail to reject \(\mathcal{M}_0\).\\
+There is not enough evidence that adding random slopes for Basement
+imporves model fit.\\
+We decude to retain \(\mathcal{M}_0\).
+\end{block}
+\end{frame}
+
+\begin{frame}{Versions and codes}
+\phantomsection\label{versions-and-codes}
+\end{frame}
+
+\begin{frame}{Versions and codes}
+\phantomsection\label{versions-and-codes-1}
+\begin{longtable}[]{@{}ll@{}}
+\toprule\noalign{}
+Package & Version \\
+\midrule\noalign{}
+\endhead
+knitr & 1.50 \\
+lme4 & 1.1.38 \\
+performance & 0.15.3 \\
+nlme & 3.1.168 \\
+ggplot2 & 3.5.2 \\
+ggh4x & 0.3.1 \\
+\bottomrule\noalign{}
+\end{longtable}
+
+\vspace{+0.3cm}
+
+R version 4.5.1\\
+All codes and dataset are avaliable in
+\href{https://github.com/senren331233/Multivariate-Data-Analysis}{\textcolor{blue}{github}}
+\end{frame}
+
+\end{document}

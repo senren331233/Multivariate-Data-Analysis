@@ -99,9 +99,32 @@ County grouping accounts for 14.5% of the total variance of the log.radon
 
 # Results
 
-## Assumption check
+## Assumption checking
 
+```{r assumption_checks, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=3.5}
+par(mfrow = c(1, 3), mar = c(4, 4, 2, 1))
 
+plot(fitted(Basement.fixed), resid(Basement.fixed),
+     xlab = "Fitted", ylab = "Residuals", main = "Residuals")
+abline(h = 0, lty = 2)
+
+r <- as.numeric(scale(resid(Basement.fixed)))
+qqnorm(r, main = "Q-Q Residuals"); qqline(r, lty = 2)
+
+u0 <- ranef(Basement.fixed)$county[["(Intercept)"]]
+qqnorm(u0, main = "Q-Q Random Intercept"); qqline(u0, lty = 2)
+
+par(mfrow = c(1, 1))
+```
+
+\vspace{+0.5cm}
+\scriptsize
+
+- The model fit with no  clear systematic bias.
+- The residuals are approximately normal distribution.
+- The random intercepts are approximately normal distribution.
+
+\normalsize
 
 # Pooling
 

@@ -23,14 +23,18 @@ knitr::kable(head(radon, 5), digits = 4, row.names = FALSE)
 Dataset: \href{https://vincentarelbundock.github.io/Rdatasets/csv/HLMdiag/radon.csv}{\textcolor{blue}{Radon data}}
 
 \vspace{-0.2cm}
+\scriptsize
+
 - **House variables:**
-  - **log.radon**:Numeric. Logarithm of indoor radon measurement values  
+  - **log.radon**:Numeric. Logarithm of indoor radon measurement values [min:-2.303/max:3.875/mean:1.225]  
   - **basement**:Binary. Measurement position indication (0=basement/1=1st floor)  
 
 - **County variables:**
   - **county**:Factor. ID of each county with 85 levels
   - **county.name**:Factor. Name of each county 
-  - **uranium**:Numeric. Average uranium in the soil of each county  
+  - **uranium**:Numeric. Average uranium in the soil of each county [min:-0.882/max:0.528/mean:-0.132] 
+  
+\normalsize
 
 # Analysis method and model specification
 
@@ -81,8 +85,8 @@ $U_j\sim\mathcal{N}(0,0.108)$
 $R_{ij}\sim\mathcal{N}(0,0.571)$
 
 ## ICC(95% CI)
-Adjusted ICC: 0.159 [0.082, 0.236]  
-Unadjusted ICC: 0.145 [0.074, 0.217]  
+Adjusted ICC: 0.159 [0.085, 0.240]  
+Unadjusted ICC: 0.145 [0.076, 0.218]  
 
 \vspace{+0.3cm}
 *Interpretation:*  
@@ -92,6 +96,34 @@ County grouping accounts for 15.9% of the total variance of the log.radon under 
 - Unadjusted:  
 County grouping accounts for 14.5% of the total variance of the log.radon
 
+# Results
+
+## Assumption checking
+
+```{r assumption_checks, echo=FALSE, message=FALSE, warning=FALSE, fig.width=12, fig.height=3.4}
+par(mfrow = c(1, 3), mar = c(4, 4, 2, 1))
+
+plot(fitted(Basement.fixed), resid(Basement.fixed),
+     xlab = "Fitted", ylab = "Residuals", main = "Residuals")
+abline(h = 0, lty = 2)
+
+r <- as.numeric(scale(resid(Basement.fixed)))
+qqnorm(r, main = "Q-Q Residuals"); qqline(r, lty = 2)
+
+u0 <- ranef(Basement.fixed)$county[["(Intercept)"]]
+qqnorm(u0, main = "Q-Q Random Intercept"); qqline(u0, lty = 2)
+
+par(mfrow = c(1, 1))
+```
+
+\vspace{+0.5cm}
+\scriptsize
+
+- The model fit with no  clear systematic bias.
+- The residuals are approximately normal distribution.
+- The random intercepts are approximately normal distribution.
+
+\normalsize
 
 # Pooling
 
